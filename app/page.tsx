@@ -33,6 +33,7 @@ export default function Login() {
       password,
     });
 
+    console.log("Login Response:", res);
     setLoading(false);
 
     if (res?.error === "No user found") {
@@ -43,8 +44,9 @@ export default function Login() {
       toast.error("Access denied for this role");
     } else if (res?.ok) {
       toast.success("Login successful");
-      router.push("/dashboard");
+      window.location.href = "/dashboard";
     } else {
+      console.error("Login failed:", res);
       toast.error("Something went wrong");
     }
   }
