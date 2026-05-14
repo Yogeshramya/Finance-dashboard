@@ -13,25 +13,25 @@ export default function Center() {
             title: "Add Center",
             description: "Create a new center record in the system.",
             icon: <PlusCircle className="w-6 h-6 text-blue-500" />,
-            action: () => router.push("/dashboard/center/add"),
+            action: () => router.push("/dashboard/centers/add"),
         },
         {
             title: "Edit Center",
             description: "Modify details of an existing center.",
             icon: <Edit3 className="w-6 h-6 text-green-500" />,
-            action: () => router.push("/dashboard/center/edit"),
+            action: () => router.push("/dashboard/centers/edit"),
         },
         {
             title: "Delete Center",
             description: "Remove a center from your records.",
             icon: <Trash2 className="w-6 h-6 text-red-500" />,
-            action: () => router.push("/dashboard/center/delete"),
+            action: () => router.push("/dashboard/centers/delete"),
         },
         {
             title: "Search Center",
             description: "Find a center quickly by name or ID.",
             icon: <Search className="w-6 h-6 text-purple-500" />,
-            action: () => router.push("/dashboard/center/search"),
+            action: () => router.push("/dashboard/centers/search"),
         },
     ];
 
