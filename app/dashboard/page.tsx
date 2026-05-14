@@ -2,6 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
@@ -33,7 +34,8 @@ interface ROWs {
 }
 
 export default function Dashboard() {
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
+    const router = useRouter();
     const [showSplash, setShowSplash] = useState(true);
 
     const [centers, setCenters] = useState(0);
@@ -63,6 +65,13 @@ export default function Dashboard() {
         const timer = setTimeout(() => setShowSplash(false), 2000);
         return () => clearTimeout(timer);
     }, []);
+
+    /* Auth Redirect */
+    useEffect(() => {
+        if (status === "unauthenticated") {
+            router.push("/");
+        }
+    }, [status, router]);
 
     /* Outstanding + Savings */
     useEffect(() => {
@@ -181,8 +190,12 @@ export default function Dashboard() {
             .then((d) => d.success && setArrearCount(d.count || 0));
     }, []);
 
-    if (!session) {
-        return <div className="p-10 text-center">Please login</div>;
+    if (status === "loading" || !session) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            </div>
+        );
     }
 
     const stats = [

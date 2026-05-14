@@ -2,13 +2,15 @@
 
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Eye, EyeOff, Lock, User } from "lucide-react";
 
 export default function Login() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
   const [email, setEmail] = useState("admin");
   const [password, setPassword] = useState("admin");
@@ -16,10 +18,10 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (session?.user) {
-      window.location.href = "/dashboard";
+    if (status === "authenticated") {
+      router.push("/dashboard");
     }
-  }, [session]);
+  }, [status, router]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -41,7 +43,7 @@ export default function Login() {
       toast.error("Access denied for this role");
     } else if (res?.ok) {
       toast.success("Login successful");
-      window.location.href = "/dashboard";
+      router.push("/dashboard");
     } else {
       toast.error("Something went wrong");
     }
