@@ -2,8 +2,6 @@ import mongoose from "mongoose";
 
 const MONGODB_URI = process.env.MONGODB_URI as string;
 
-if (!MONGODB_URI) throw new Error("Missing MONGODB_URI in .env");
-
 type MongooseGlobal = typeof globalThis & {
     mongoose?: { conn: typeof mongoose | null; promise: Promise<typeof mongoose> | null };
 };
@@ -12,6 +10,7 @@ const globalWithMongoose = global as MongooseGlobal;
 const cached = globalWithMongoose.mongoose || { conn: null, promise: null };
 
 export async function connectDB() {
+    if (!MONGODB_URI) throw new Error("Missing MONGODB_URI in .env");
     if (cached.conn) return cached.conn;
 
     if (!cached.promise) {
