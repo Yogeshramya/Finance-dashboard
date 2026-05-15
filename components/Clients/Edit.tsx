@@ -11,6 +11,7 @@ import PageHeader from "../PageHeader";
 import LoadingOverlay from "../Loading";
 import Image from "next/image";
 import { Group } from "@/types/group";
+import { getOptimizedImageUrl } from "@/lib/cloudinary-utils";
 
 interface Nominee {
     name: string;
@@ -264,7 +265,7 @@ export default function EditClientPage({ id }: { id: string }) {
                                 <div className="mb-2">
                                     <p className="text-sm text-gray-600">Current Document:</p>
                                     <Image
-                                        src={form.documentFile}
+                                        src={getOptimizedImageUrl(form.documentFile)}
                                         alt="Document"
                                         className="w-32 h-32 object-cover rounded border"
                                         width={128}

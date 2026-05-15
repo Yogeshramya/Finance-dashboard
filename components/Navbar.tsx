@@ -94,7 +94,7 @@ export default function Navbar({ onMenuClick }: { onMenuClick?: () => void }) {
                 </button>
 
                 <Image
-                    src="/logo.png"
+                    src="/logo.svg"
                     alt="Logo"
                     width={38}
                     height={38}

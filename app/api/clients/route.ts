@@ -52,9 +52,11 @@ export async function GET(req: Request) {
         const to = searchParams.get("to");
         const status = searchParams.get("status");
 
-        const query: ClientQuery = {
-            branch: token.branch?._id ?? "",
-        };
+        const query: any = {};
+
+        if (token.branch?._id) {
+            query.branch = token.branch._id;
+        }
 
         /* ---------- SEARCH ---------- */
 

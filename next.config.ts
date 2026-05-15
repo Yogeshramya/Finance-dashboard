@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
                 hostname: "pub-8f1538554ef5413f9b6101e5d67fd1ea.r2.dev",
                 pathname: "/**",
             },
+            {
+                protocol: "https",
+                hostname: "res.cloudinary.com",
+                pathname: "/**",
+            },
         ],
     },
 };

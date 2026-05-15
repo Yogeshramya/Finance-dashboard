@@ -264,7 +264,7 @@ export default function Dashboard() {
                             animate={{ scale: 0.2, x: "-47vw", y: "-45vh" }}
                             transition={{ duration: 1.2 }}
                         >
-                            <Image src="/logo.png" alt="logo" width={200} height={200} />
+                            <Image src="/logo.svg" alt="logo" width={200} height={200} />
                         </motion.div>
                     </motion.div>
                 )}

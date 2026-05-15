@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { Customer } from "@/types/customer";
+import { getOptimizedImageUrl } from "@/lib/cloudinary-utils";
 
 export default function ClientDetails({ client }: { client: Customer }) {
     return (
@@ -37,7 +38,7 @@ export default function ClientDetails({ client }: { client: Customer }) {
                         <h2 className="text-lg font-semibold">Member Photo</h2>
                         {client.memberPhoto ? (
                             <Image
-                                src={client.memberPhoto}
+                                src={getOptimizedImageUrl(client.memberPhoto)}
                                 alt="Member Photo"
                                 loading="eager"
                                 width={200}
@@ -123,7 +124,7 @@ function Doc({ image, label }: DocProps) {
             <h3 className="font-medium mb-1">{label}</h3>
             {image ? (
                 <Image
-                    src={image}
+                    src={getOptimizedImageUrl(image)}
                     alt={label}
                     loading="eager"
                     width={300}
