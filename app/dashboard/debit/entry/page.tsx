@@ -55,6 +55,7 @@ export default function DebitEntry() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const form = e.currentTarget;
+        const formData = new FormData(form);
 
         if (!session?.user) {
             toast.error("Not authenticated!");
@@ -67,14 +68,14 @@ export default function DebitEntry() {
         }
 
         const debitData = {
-            date: form.date.value,
+            date: formData.get("date"),
             title,
-            details: form.details.value,
-            amount: Number(form.amount.value),
+            details: formData.get("details"),
+            amount: Number(formData.get("amount")),
             mode,
             status: "PENDING",
             employee: session.user.id,
-            branch: session.user.branch?._id || null,
+            branch: session.user.branch?._id || session.user.branch || null,
             createdByName: session.user.name,
         };
 
@@ -94,6 +95,12 @@ export default function DebitEntry() {
         } else {
             toast.error(result.error || "Failed to save debit!");
         }
+    };
+
+    const handleClear = (form: HTMLFormElement) => {
+        form.reset();
+        setTitle("");
+        setMode("Cash");
     };
 
     return (
@@ -171,11 +178,7 @@ export default function DebitEntry() {
                         <Button
                             type="button"
                             variant="outline"
-                            onClick={() => {
-                                (document.querySelector("form") as HTMLFormElement)?.reset();
-                                setTitle("");
-                                setMode("Cash");
-                            }}
+                            onClick={(e) => handleClear(e.currentTarget.form as HTMLFormElement)}
                             className="px-10"
                         >
                             CLEAR

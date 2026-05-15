@@ -63,10 +63,25 @@ export default function CreditReport() {
         }
     };
 
+    const [titles, setTitles] = useState<{ _id: string; title: string }[]>([]);
+
     useEffect(() => {
         fetchCredits();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, filters]);
+
+    useEffect(() => {
+        const fetchTitles = async () => {
+            try {
+                const res = await fetch("/api/credit/title");
+                const data = await res.json();
+                if (data.success) setTitles(data.titles);
+            } catch (err) {
+                console.error("Error fetching titles:", err);
+            }
+        };
+        fetchTitles();
+    }, []);
 
     const filterApply = () => {
         setPage(1);
@@ -157,9 +172,11 @@ export default function CreditReport() {
                         }
                     >
                         <option value="ALL">All Types</option>
-                        <option value="Admission Fee">Admission Fee</option>
-                        <option value="Insurance Fee">Insurance Fee</option>
-                        <option value="Application Fee">Application Fee</option>
+                        {titles.map((t) => (
+                            <option key={t._id} value={t.title}>
+                                {t.title}
+                            </option>
+                        ))}
                     </select>
                 </div>
 

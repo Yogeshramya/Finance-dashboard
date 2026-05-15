@@ -21,6 +21,21 @@ export default function EditDebit() {
     const [mode, setMode] = useState<"Cash" | "Bank">("Cash");
     const [title, setTitle] = useState("");
 
+    const [titles, setTitles] = useState<{ _id: string; title: string }[]>([]);
+
+    useEffect(() => {
+        async function fetchTitles() {
+            try {
+                const res = await fetch("/api/debit/title");
+                const data = await res.json();
+                if (data.success) setTitles(data.titles);
+            } catch (err) {
+                console.error("Error fetching titles:", err);
+            }
+        }
+        fetchTitles();
+    }, []);
+
     // Load debit data
     useEffect(() => {
         async function loadDebit() {
@@ -49,12 +64,13 @@ export default function EditDebit() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const form = e.currentTarget;
+        const formData = new FormData(form);
 
         const payload = {
-            date: form.date?.value,
+            date: formData.get("date"),
             title,
-            details: form.details.value,
-            amount: Number(form.amount.value),
+            details: formData.get("details"),
+            amount: Number(formData.get("amount")),
             mode,
         };
 
@@ -112,16 +128,9 @@ export default function EditDebit() {
                         />
 
                         <datalist id="debitTitles">
-                            <option value="Salary" />
-                            <option value="Stationery" />
-                            <option value="Office Expense" />
-                            <option value="Rent" />
-                            <option value="Electricity Bill" />
-                            <option value="Insurance" />
-                            <option value="Bank Charges" />
-                            <option value="Vehicle Expense" />
-                            <option value="Fuel" />
-                            <option value="Other" />
+                            {titles.map((t) => (
+                                <option key={t._id} value={t.title} />
+                            ))}
                         </datalist>
                     </div>
 

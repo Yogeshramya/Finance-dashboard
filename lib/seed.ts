@@ -7,6 +7,8 @@ import Credit from "@/models/Credit";
 import Debit from "@/models/Debit";
 import Loan from "@/models/Loan";
 import Savings from "@/models/Savings";
+import CreditTitle from "@/models/CreditTitle";
+import DebitTitle from "@/models/DebitTitle";
 
 // Demo data for FinoraX
 const demoBranches = [
@@ -63,6 +65,23 @@ export async function seedDemoData() {
             Debit.deleteMany({}),
             Loan.deleteMany({}),
             Savings.deleteMany({}),
+            CreditTitle.deleteMany({}),
+            DebitTitle.deleteMany({}),
+        ]);
+
+        // Seed titles
+        await CreditTitle.insertMany([
+            { title: "Admission Fee" },
+            { title: "Insurance Fee" },
+            { title: "Application Fee" },
+            { title: "Miscellaneous" },
+        ]);
+
+        await DebitTitle.insertMany([
+            { title: "Office Rent" },
+            { title: "Salary" },
+            { title: "Electricity Bill" },
+            { title: "Miscellaneous" },
         ]);
 
         // Seed branches
@@ -123,9 +142,11 @@ export async function seedDemoData() {
                 await Credit.create({
                     client: client._id,
                     amount: loan.amount,
-                    description: "Loan disbursement",
+                    title: "Application Fee",
+                    details: "Loan disbursement entry",
                     branch: branch._id,
                     date: loan.createdAt,
+                    status: "APPROVED"
                 });
 
                 // Create some debit transactions (repayments)
@@ -134,9 +155,11 @@ export async function seedDemoData() {
                     await Debit.create({
                         client: client._id,
                         amount: Math.floor(loan.amount / loan.duration) + Math.floor(Math.random() * 5000),
-                        description: "Loan repayment",
+                        title: "Miscellaneous",
+                        details: "Loan repayment entry",
                         branch: branch._id,
                         date: new Date(loan.createdAt.getTime() + (p + 1) * 30 * 24 * 60 * 60 * 1000),
+                        status: "APPROVED"
                     });
                 }
 

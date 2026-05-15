@@ -53,21 +53,22 @@ export default function CreditEntry() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const form = e.currentTarget;
+        const formData = new FormData(form);
 
-        const amount = Number((form.amount).value);
+        const amount = Number(formData.get("amount"));
         if (!amount) return toast.error("Enter Amount!");
 
         if (!title) return toast.error("Please select a credit title!");
 
         const creditData = {
-            date: (form.date).value,
+            date: formData.get("date"),
             title,
-            details: (form.details).value,
+            details: formData.get("details"),
             amount,
             mode,
             status: "PENDING",
             employee: session?.user?.id ?? null,
-            branch: session?.user?.branch ?? null,
+            branch: session?.user?.branch?._id || session?.user?.branch || null,
         };
 
         const res = await fetch("/api/credit", {

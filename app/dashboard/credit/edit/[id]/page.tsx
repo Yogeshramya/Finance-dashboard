@@ -20,6 +20,21 @@ export default function EditCredit() {
     const [mode, setMode] = useState("Cash");
     const [title, setTitle] = useState("");
 
+    const [titles, setTitles] = useState<{ _id: string; title: string }[]>([]);
+
+    useEffect(() => {
+        async function fetchTitles() {
+            try {
+                const res = await fetch("/api/credit/title");
+                const data = await res.json();
+                if (data.success) setTitles(data.titles);
+            } catch (err) {
+                console.error("Error fetching titles:", err);
+            }
+        }
+        fetchTitles();
+    }, []);
+
     useEffect(() => {
         async function fetchCredit() {
             const res = await fetch(`/api/credit/${id}`);
@@ -43,12 +58,13 @@ export default function EditCredit() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const form = e.currentTarget;
+        const formData = new FormData(form);
 
         const updated = {
-            date: form.date.value,
+            date: formData.get("date"),
             title,
-            details: form.details.value,
-            amount: Number(form.amount.value),
+            details: formData.get("details"),
+            amount: Number(formData.get("amount")),
             mode,
         };
 
@@ -100,17 +116,9 @@ export default function EditCredit() {
                         />
 
                         <datalist id="creditTitles">
-                            <option value="HO AC" />
-                            <option value="Admission Fees" />
-                            <option value="Advance" />
-                            <option value="Application Fee" />
-                            <option value="FC INVESTMENT" />
-                            <option value="GL Upfront" />
-                            <option value="Insurance Fee" />
-                            <option value="LOP" />
-                            <option value="Over Cash" />
-                            <option value="Remittance" />
-                            <option value="STAFF DEPOSIT" />
+                            {titles.map((t) => (
+                                <option key={t._id} value={t.title} />
+                            ))}
                         </datalist>
                     </div>
 

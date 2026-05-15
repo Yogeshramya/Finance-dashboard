@@ -68,10 +68,25 @@ export default function DebitReport() {
         }
     };
 
+    const [titles, setTitles] = useState<{ _id: string; title: string }[]>([]);
+
     useEffect(() => {
         fetchDebits();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, filters]);
+
+    useEffect(() => {
+        const fetchTitles = async () => {
+            try {
+                const res = await fetch("/api/debit/title");
+                const data = await res.json();
+                if (data.success) setTitles(data.titles);
+            } catch (err) {
+                console.error("Error fetching titles:", err);
+            }
+        };
+        fetchTitles();
+    }, []);
 
     const applyFilter = () => {
         setPage(1);
@@ -160,12 +175,11 @@ export default function DebitReport() {
                         }
                     >
                         <option value="ALL">All Types</option>
-                        <option value="Loan Disbursement">
-                            Loan Disbursement
-                        </option>
-                        <option value="Savings Return">
-                            Savings Return
-                        </option>
+                        {titles.map((t) => (
+                            <option key={t._id} value={t.title}>
+                                {t.title}
+                            </option>
+                        ))}
                     </select>
                 </div>
 
